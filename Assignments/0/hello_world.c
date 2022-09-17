@@ -9,6 +9,8 @@ void swap(int *a, int *b) {
 int main() {
 	printf("Hello world!\n");
 	printf("Hello world, again!\n");
+	
+	printf("Hello world!\n");
 
 	int a = 0;
 	int b = 1;
