@@ -16,6 +16,7 @@ typedef struct cell_type {
 struct list_type {
 	cell* head;
 	cell* tail;
+	int size;
 };
 
 

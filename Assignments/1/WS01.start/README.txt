@@ -1,9 +1,9 @@
 
-First Name:
+First Name: Jiayao
 
-Last Name:
+Last Name: Jin
 
-NYU ID:
+NYU ID: jj2915
 
 =======================================================================================
 Files submitted:
@@ -39,6 +39,12 @@ Comments:
 =======================================================================================
 Textual answers: 
 
-Question 5:
+Question 5: Changes could be made in list.h and list_impl.c. Steps:
+	1. We can add another attribute `int size` inside `struct list_type`.
+	2. Inside the `init_list(struct list_type *l)`, we set `l->size = 0`.
+	3. Inside the `insert_head(struct list_type *l`, we set `l->size++`.
+	4. Inside the `extract_head(struct list_type *l)` and `extract_tail(struct list_type *l)`, if is successfully extracted, we set `l->size--`.
+	5. For `list_size(struct list_type *l)`, we simply return `l->size`.
+
 
 	
