@@ -1,7 +1,6 @@
 #include <stack.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "libstack.h"
 
 int main(int argc, char** argv) {
 

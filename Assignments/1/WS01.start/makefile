@@ -14,6 +14,9 @@ ${OBJ}/stack_array.o: ${INC}/stack.h ${SRC}/stack_array.c
 ${OBJ}/stack_test.o: ${INC}/stack.h ${SRC}/stack_test.c
 	${CC} -c -o ${OBJ}/stack_test.o ${SRC}/stack_test.c -I${INC}
 
+${OBJ}/fifo_test.o: ${INC}/fifo.h ${SRC}/fifo_test.c
+	${CC} -c -o ${OBJ}/fifo_test.o ${SRC}/fifo_test.c -I${INC}
+
 ${OBJ}/stack_list.o: ${INC}/stack.h ${SRC}/stack_list.c
 	${CC} -c -o ${OBJ}/stack_list.o ${SRC}/stack_list.c -I${INC}
 
@@ -41,11 +44,11 @@ newlibstack: doublell ${OBJ}/stack_list.o
 libfifo: doublell ${OBJ}/fifo_list.o
 	ar -crs ${LIB}/libfifo.a ${OBJ}/fifo_list.o ${OBJ}/list_impl.o
 
-testlibstack: ${SRC}/stack_test.c
-	${CC} -o ${BIN}/stack_test ${SRC}/stack_test.c ${LIB}/libstack.a -I${INC}
+testlibstack: ${SRC}/stack_test.c ${OBJ}/stack_test.o
+	${CC} -o ${BIN}/stack_test ${OBJ}/stack_test.o ${LIB}/libstack.a
 
-testlibfifo: ${SRC}/fifo_test.c
-	${CC} -o ${BIN}/fifo_test ${SRC}/fifo_test.c ${LIB}/libfifo.a -I${INC}
+testlibfifo: ${SRC}/fifo_test.c ${OBJ}/fifo_test.o
+	${CC} -o ${BIN}/fifo_test ${OBJ}/fifo_test.o  ${LIB}/libfifo.a
 
 runtestlibstack: newlibstack testlibstack
 	@echo "Start testing libstack..."
