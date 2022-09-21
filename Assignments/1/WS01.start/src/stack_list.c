@@ -6,7 +6,7 @@ struct list_type stack;
 
 int init_stack() {
     init_list(&stack);
-    return 0;
+    return list_size(&stack);
 }
 
 int push(void* element) {

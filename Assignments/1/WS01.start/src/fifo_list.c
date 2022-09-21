@@ -6,7 +6,7 @@ struct list_type QUEUE;
 
 int init_queue() {
     init_list(&QUEUE);
-    return 0;
+    return list_size(&QUEUE);
 }
 
 int queue(void* element) {

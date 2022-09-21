@@ -6,7 +6,7 @@ OBJ=obj
 SRC=src
 
 
-all: runstack
+all: doublell newlibstack libfifo
 
 ${OBJ}/stack_array.o: ${INC}/stack.h ${SRC}/stack_array.c
 	${CC} -c -o ${OBJ}/stack_array.o ${SRC}/stack_array.c -I${INC}

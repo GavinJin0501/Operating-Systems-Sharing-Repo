@@ -19,6 +19,7 @@ int main(int argc, char** argv) {
 	
 	for(i = 0; i < nb; i++)
 		printf("%s \n", (char*)pop());
+	printf("The size of the stack is %d\n", size());
 
 	return EXIT_SUCCESS;
 }
