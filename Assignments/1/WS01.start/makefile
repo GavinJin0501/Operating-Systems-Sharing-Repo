@@ -39,7 +39,7 @@ libstack: ${OBJ}/stack_array.o
 	ar -crs ${LIB}/libstack.a ${OBJ}/stack_array.o
 
 newlibstack: doublell ${OBJ}/stack_list.o
-	ar -rsv ${LIB}/libstack.a ${OBJ}/stack_list.o ${OBJ}/list_impl.o
+	ar -crs ${LIB}/libstack.a ${OBJ}/stack_list.o ${OBJ}/list_impl.o
 
 libfifo: doublell ${OBJ}/fifo_list.o
 	ar -crs ${LIB}/libfifo.a ${OBJ}/fifo_list.o ${OBJ}/list_impl.o
@@ -53,13 +53,13 @@ testlibfifo: ${SRC}/fifo_test.c ${OBJ}/fifo_test.o
 runtestlibstack: newlibstack testlibstack
 	@echo "Start testing libstack..."
 	@echo "========================="
-	@${BIN}/stack_test
+	@valgrind --leak-check=yes ${BIN}/stack_test
 	@echo "========================="
 
 runtestlibfifo: libfifo testlibfifo
 	@echo "Start testing libfifio..."
 	@echo "========================="
-	@${BIN}/fifo_test
+	@valgrind --leak-check=yes ${BIN}/fifo_test
 	@echo "========================="
 
 # Utilities

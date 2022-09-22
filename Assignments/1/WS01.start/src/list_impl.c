@@ -6,7 +6,6 @@
 void init_list(struct list_type *l) {
 	l->head = NULL;
 	l->tail = NULL;
-	// l->size = 0;
 }
 	
 	
@@ -20,7 +19,6 @@ void insert_head(struct list_type *l, void* element) {
 	l->head = new_cell;
 	if (l->tail == NULL)
 			l->tail = l->head;
-	// l->size++;
 }
 
 
@@ -29,10 +27,11 @@ void* extract_head(struct list_type *l) {
 	if (l->head == NULL) {
 		return NULL;
 	}
-	void* to_return = NULL;
 
 	cell* old_head = l->head;
 	cell* new_head = old_head->next;
+	void* to_return = old_head->content;
+	old_head->content = NULL;
 
 	// remove the links & change the head/tail
 	old_head->next = NULL;
@@ -42,10 +41,6 @@ void* extract_head(struct list_type *l) {
 	} else {
 		l->tail = NULL;
 	}
-
-	// save the res
-	to_return = old_head->content;
-	old_head->content = NULL;
 
 	// free memory
 	free(old_head);
@@ -60,10 +55,11 @@ void* extract_tail(struct list_type *l) {
 	if (l->tail == NULL) {
 		return NULL;
 	}
-	void* to_return = NULL;
 
 	cell* old_tail = l->tail;
 	cell* new_tail = old_tail->previous;
+	void* to_return = old_tail->content;
+	old_tail->content = NULL;
 
 	// remove the links
 	old_tail->previous = NULL;
@@ -72,11 +68,7 @@ void* extract_tail(struct list_type *l) {
 		new_tail->next = NULL;
 	} else {
 		l->head = NULL;
-	}
-
-	// save the res
-	to_return = old_tail->content;
-	old_tail->content = NULL;
+	}	
 
 	// free memory
 	free(old_tail);
@@ -97,17 +89,5 @@ int list_size(struct list_type *l) {
 	}
 
 	return size;
-
-	// cell* curr = l->tail;
-	// int size = 0;
-
-	// while (curr != NULL) {
-	// 	printf("%s ", (char*) (curr->content));
-	// 	size++;
-	// 	curr = curr->previous;
-	// }
-	// printf("\n");
-	// return size;
-	// return l->size;
 }
 	

@@ -11,7 +11,7 @@ int init_queue() {
 
 int queue(void* element) {
     insert_head(&QUEUE, element);
-    return 0;
+    return list_size(&QUEUE);
 };
 
 void* dequeue() {
