@@ -53,13 +53,13 @@ testlibfifo: ${SRC}/fifo_test.c ${OBJ}/fifo_test.o
 runtestlibstack: newlibstack testlibstack
 	@echo "Start testing libstack..."
 	@echo "========================="
-	@valgrind --leak-check=yes ${BIN}/stack_test
+	${BIN}/stack_test
 	@echo "========================="
 
 runtestlibfifo: libfifo testlibfifo
 	@echo "Start testing libfifio..."
 	@echo "========================="
-	@valgrind --leak-check=yes ${BIN}/fifo_test
+	${BIN}/fifo_test
 	@echo "========================="
 
 # Utilities
