@@ -19,7 +19,6 @@ int main(int argc, char** argv) {
 	
 	for(i = 0; i < nb; i++)
 		printf("%s \n", (char*)dequeue());
-	printf("The size of the queue is %d\n", size());
 	
 	return EXIT_SUCCESS;
 }
