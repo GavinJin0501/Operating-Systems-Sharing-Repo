@@ -6,7 +6,7 @@ OBJ=obj
 SRC=src
 
 
-all: doublell newlibstack libfifo
+all: runstack
 
 ${OBJ}/stack_array.o: ${INC}/stack.h ${SRC}/stack_array.c
 	${CC} -c -o ${OBJ}/stack_array.o ${SRC}/stack_array.c -I${INC}
@@ -34,9 +34,6 @@ runstack: ${BIN}/stack_test
 
 doublell: ${INC}/list.h ${SRC}/list_impl.c
 	${CC} -c -o ${OBJ}/list_impl.o ${SRC}/list_impl.c -I${INC}
-
-libstack: ${OBJ}/stack_array.o
-	ar -crs ${LIB}/libstack.a ${OBJ}/stack_array.o
 
 newlibstack: doublell ${OBJ}/stack_list.o
 	ar -crs ${LIB}/libstack.a ${OBJ}/stack_list.o ${OBJ}/list_impl.o

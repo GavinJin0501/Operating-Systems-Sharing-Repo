@@ -30,6 +30,14 @@ Compilation rules in the Makefile:
 # make newlibstack:	recompiles the stack, implemented as a double-linked list, then integrates it in an update of libstack.a (Q3)
 # make libfifo: 	compiles a dynamic queue implemented as a double-linked list, then integrates it in a library (lib/libfifo.a) (Q4)
 
+Mine:
+make doublell: compile the doubly linked list implementation (Q2)
+make newlibstack: recompiles the stack, implemented as a double-linked list, then integrates it in an update of libstack.a (Q3)
+make testlibstack: compiles the test for stack using our library for stack (Q3)
+make runtestlibstack: calling newlibstack and testlibstack to run the test (Q3)
+make libfifo: compiles a dynamic queue implemented as a double-linked list, then integrates it in a library (lib/libfifo.a) (Q4)
+make testlibfifo: compiles the test for queue using our library for queue (Q4)
+make runtestlibfifo: calling libfifo and testlibfifo to run the test (Q4)
 
 =======================================================================================
 Comments:

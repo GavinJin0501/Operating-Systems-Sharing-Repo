@@ -21,15 +21,12 @@ int main(int argc, char* argv[]) {
                 break;
             default:
                 i++;
+                if (i == N_CHILDREN) {
+                    wait(NULL);
+                }
         }
     }
 
-    if (child > 0) {
-        for (i = 0; i < N_CHILDREN; i++) {
-            wait(NULL);
-        }    
-    }
-    
     printf("My pid: %d, parent pid: %d, child pid: %d\n", getpid(), getppid(), child);
     return EXIT_SUCCESS;
 }
