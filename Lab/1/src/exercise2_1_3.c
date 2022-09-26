@@ -8,22 +8,19 @@
 #include <stdlib.h>
 
 int main(int argc, char* argv[]) {
-    pid_t child;
+    int pid, i;
+    int status;
+    for (i = 0; (i < N_CHILDREN) && ((pid=fork()) > 0); i++);
 
-    for (int i = 0; i < N_CHILDREN; i++) {
-        child = fork();
-        if (child == -1) {
-            perror("fork");
-            exit(-1);
-        } else if (child == 0) {
-            printf("CHILD > My pid: %d, parent pid: %d\n", getpid(), getppid());
-            exit(i);
+    if (pid == 0) {
+        printf("CHILD > My parent pid: %d\n", getppid());
+        exit(i);
+    } else {
+        for (int j = 0; j < N_CHILDREN; j++) {
+            wait(&status);
+            printf("PARENT> My pid: %d, wait for: %d\n", getpid(), WEXITSTATUS(status));
         }
     }
-    
-    for (int i = 0; i < N_CHILDREN; i++) {
-        wait(NULL);
-    }
-    printf("PARENT> My pid: %d\n", getpid());
+
     return EXIT_SUCCESS;
 }

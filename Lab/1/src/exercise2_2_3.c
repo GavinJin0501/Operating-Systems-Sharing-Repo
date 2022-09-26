@@ -8,27 +8,16 @@
 #include <stdlib.h>
 
 void generate_process(int i) {
-    if (i >= N_CHILDREN) return;
-
-    pid_t child;
-    switch (child = fork()) {
-        case (pid_t) -1:
-            perror("fork");
-            exit(2);
-        case (pid_t) 0:
-            printf("CHILD > My pid: %d, parent pid: %d\n", getpid(), getppid());
-            exit(i);
-        default:
-            generate_process(++i);
-            wait(NULL);
-            return;
+    if ((i < N_CHILDREN) && (fork() > 0)) {
+        generate_process(++i);
+    } else if (i < N_CHILDREN) {
+        printf("Child > My pid: %d, parent pid: %d\n", getpid(), getppid());
     }
-
-    
 }
 
 int main(int argc, char* argv[]) {
     printf("Parent> My pid: %d, parent pid: %d\n", getpid(), getppid());
     generate_process(0);
+    for (int i = 0; i < N_CHILDREN; i++) wait(NULL);
     return EXIT_SUCCESS;
 }
