@@ -16,12 +16,11 @@ void generate_process(int i) {
             perror("fork");
             exit(2);
         case (pid_t) 0:
-            // child do something
             printf("CHILD > My pid: %d, parent pid: %d\n", getpid(), getppid());
             exit(i);
         default:
-            // parent do something
             generate_process(++i);
+            wait(NULL);
             return;
     }
 

@@ -8,21 +8,19 @@
 #include <stdlib.h>
 
 int main(int argc, char* argv[]) {
-    int i = 0;
     pid_t child;
 
-    while (i < N_CHILDREN) {
-        switch (child = fork()) {
-            case (pid_t) -1:
-                perror("fork");
-                exit(2);
-            case (pid_t) 0:
-                i = N_CHILDREN + 1;
-                break;
-            default:
-                i++;
+    for (int i = 0; i < N_CHILDREN; i++) {
+        child = fork();
+        if (child == -1) {
+            perror("fork");
+            exit(-1);
+        } else if (child == 0) {
+            printf("CHILD > My pid: %d, parent pid: %d\n", getpid(), getppid());
+            exit(i);
         }
-    }    
-    printf("My pid: %d, parent pid: %d, child pid: %d\n", getpid(), getppid(), child);
+    }
+
+    printf("PARENT> My pid: %d\n", getpid());
     return EXIT_SUCCESS;
 }
