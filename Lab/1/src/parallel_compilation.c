@@ -85,15 +85,42 @@ int main(int argc, char* argv[]) {
             wait(NULL);
         }
         printf("main process -> All successful!\n");
-        char final_cmd[BUFFER_SIZE] = "gcc -Wall -o bin/prog";
+        char* cmd[5 + files_num];
+        for (int z = 0; z < 5 + files_num; z++) {
+            cmd[z] = (char*) malloc(sizeof(char*));
+        }
+        strcpy(cmd[0], "gcc");
+        strcpy(cmd[1], "-Wall");
+        strcpy(cmd[2], "-o");
+        strcpy(cmd[3], "bin/prog");
         for (j = 0; j < files_num; j++) {
             char object_path[BUFFER_SIZE] = OBJ;
             strcat(object_path, source_files[j]);
             object_path[get_length(object_path) - 1] = 'o';
-            strcat(strcat(final_cmd, " "), object_path);
+            strcpy(cmd[j + 4], object_path);
         }
-        printf("main process -> %s\n", final_cmd);
-        execl(GCC, final_cmd, NULL);
+        cmd[4+files_num] = NULL;
+        printf("main process -> ");
+        for (int z = 0; z < 4 + files_num; z++) {
+            printf("%s ", cmd[z]);
+        }
+        printf("\n");
+
+        if (fork() == 0) {
+            execv(GCC, (char**) cmd);
+        } else {
+            wait(NULL);
+        }
+
+        if (fork() == 0) {
+            execlp("bin/prog", "bin/prog", NULL);
+        } else {
+            wait(NULL);
+        }
+        
+        for (int z = 0; z < 5 + files_num; z++) {
+            free(cmd[z]);
+        }
     }
 
     return 0;
