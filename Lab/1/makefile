@@ -2,6 +2,7 @@ CC=gcc -Wall
 BIN=bin
 SRC=src
 OBJ=obj
+PC=concurrent-compilation
 
 
 
@@ -13,10 +14,10 @@ exercise:
 	echo Start exercise$$NAME...; \
 	${BIN}/exercise$$NAME; \
 
-parallel_compilation: clean ${SRC}/parallel_compilation.c
-	${CC} -o ${BIN}/parallel_compilation ${SRC}/parallel_compilation.c
+parallel_compilation: clean ${PC}/parallel_compilation.c
+	${CC} -o ${PC}/parallel_compilation ${PC}/parallel_compilation.c
 	@echo =====================================
-	@${BIN}/parallel_compilation concurrent-compilation
+	@${PC}/parallel_compilation ${PC}/main.c ${PC}/titi.c ${PC}/tata.c ${PC}/toto.c
 	@echo =====================================
 
 spy: ${SRC}/spy.c

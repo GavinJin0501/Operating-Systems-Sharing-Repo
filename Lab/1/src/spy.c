@@ -55,11 +55,15 @@ int main(int argc, char **argv)
 				if (command_size == 2) {
 					execlp(command[0], command[0], command[1], NULL);
 				} else {
-					execvp(command[0], command);
+					execvp(command[0], &command[0]);
 				}
 				exit(0);
 			} else {
 				wait(NULL);
+
+				for (int j = 0; j < command_size; j++) {
+					free(command[j]);
+				}
 			}
 		}
     }
