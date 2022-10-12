@@ -8,12 +8,22 @@ NYU ID: jj2915
 =======================================================================================
 Files submitted:
 
+src:
+    converters.c
+    decoder.c
+    multi-converter.c
+    trace.c
+
+include:
+    converters.h
+    decoder.h
 
 =======================================================================================
 Targets in the Makefile:
 
-
-
+Q1: running question 1
+Q2: running question 2
+Q3: running question 3
 
 
 =======================================================================================
@@ -25,7 +35,7 @@ Comments:
 Textual answers: 
 Q1:
     1. 6 processes are created upon executing this program.
-    2. Family tree:            output:
+    2. Family tree:            output (does not mean the sequence):
         p                      no output
         - c1                   i = 0 \n j = 0
         - c2                   i = 1
