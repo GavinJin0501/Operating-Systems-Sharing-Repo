@@ -32,6 +32,4 @@ Q1:
             - c2c1             j = 1
         - c3                   i = 2
             - c3c1             no output
-            - c3c2             j = 2
-
-Q2:
+                - c3c1c1       j = 2

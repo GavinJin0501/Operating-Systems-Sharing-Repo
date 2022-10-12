@@ -11,7 +11,9 @@
 
 
 #define _XOPEN_SOURCE 700
+#ifndef NUM_OF_CHILDREN
 #define NUM_OF_CHILDREN 10
+#endif
 
 
 int magicsq[3][3] = {{4, -1, 8}, {-1, -1, -1}, {2, -1, 6}};

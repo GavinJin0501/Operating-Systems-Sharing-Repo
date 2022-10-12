@@ -19,11 +19,11 @@ int main() {
             if (p == 0)
                 printf ( "j = %d \n", j);
             else
-                wait(NULL); 
+                wait(0); 
             exit(j);
         }
     
     for (int z = 0; z < 3; z++)
-        wait(NULL);
-    return (0);
+        wait(0);
+    return 0;
 }
