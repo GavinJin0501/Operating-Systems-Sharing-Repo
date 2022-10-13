@@ -111,7 +111,6 @@ int SJF(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
     //      j is the index in the job queue
     j = 0;
     while ((i = schedData->queues[0][j]) != -1 && tasks[i].state != RUNNING) j++;
-    printf("%d, %d\n", i, j);
 
     /* i is the index of the task that is running if i is not -1 */ 
     if (i != -1) {
@@ -162,8 +161,6 @@ int SRTF(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
     sr_job = getShortestJobIndex(tasks, schedData, 2);
     j = 0;
     while ((i = schedData->queues[0][j]) != -1 && tasks[i].state != RUNNING) j++;
-    printf("sr_job index: %d, runnning_job index: %d\n", sr_job, i);
-    printf("Task %d: executionTime: %d, computationTime: %d\n", i + 1, tasks[i].executionTime, tasks[i].computationTime);
 
     // if there is a running task with index i
     if (i != -1) { 
