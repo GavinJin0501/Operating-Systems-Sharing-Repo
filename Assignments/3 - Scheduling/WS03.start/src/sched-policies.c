@@ -181,6 +181,7 @@ int SRTF(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
         }
     } 
 
+    // Otherwise, try to elect a new task 
     sr_job = getShortestJobIndex(tasks, schedData, 2);
     if (sr_job != -1) {
         tasks[sr_job].executionTime ++;
