@@ -64,16 +64,17 @@ void printFinalStatistics(task tasks[], int nbOfTasks, int totalTime) {
     int i, turnaroundTime;
     int totalWaitingTime = 0;
     double penaltyRate = 0;
-    int averageWaitingTime = 0;
-    double throughput = 0;
+    double averageWaitingTime = 0;
+    double throughput = (double) totalTime / nbOfTasks;
     printf("STATISTICS ########\n");
     for(i=0; i<nbOfTasks; i++) {
-        turnaroundTime = 0;
-        totalWaitingTime += 0;
-        penaltyRate = 0;
+        turnaroundTime = tasks[i].completionDate - tasks[i].arrivalDate;
+        totalWaitingTime += (tasks[i].completionDate - tasks[i].arrivalDate) - tasks[i].computationTime;
+        penaltyRate = (double) turnaroundTime / tasks[i].computationTime;
         printf("Task: %s \t turnaround time:%d \t penalty rate:%2.2f\n",
                tasks[i].name, turnaroundTime, penaltyRate);
     }
+    averageWaitingTime = (double) totalWaitingTime / nbOfTasks;
     printf("Average waiting time = %2.2f\n", averageWaitingTime);
     printf("Throughput = %2.2f\n\n", throughput);
 }
