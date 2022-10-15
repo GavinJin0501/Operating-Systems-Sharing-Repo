@@ -129,8 +129,7 @@ int SJF(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
     }
 
     // Otherwise, try to elect a new task if no task 
-    i = getShortestJobIndex(tasks, schedData, 1);
-    if (i != -1){
+    if ((i = getShortestJobIndex(tasks, schedData, 1)) != -1){
         tasks[i].executionTime ++;
         tasks[i].state = RUNNING;
         return i;
@@ -182,28 +181,78 @@ int SRTF(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
     } 
 
     // Otherwise, try to elect a new task 
-    sr_job = getShortestJobIndex(tasks, schedData, 2);
-    if (sr_job != -1) {
+    if ((sr_job = getShortestJobIndex(tasks, schedData, 2)) != -1) {
         tasks[sr_job].executionTime ++;
         tasks[sr_job].state = RUNNING;
         return sr_job;
     }
 
+    // No task could be elected
     return -1;
 }
 
 
 int RR(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
     //TODO (ASSIGNMENT Q1)
+     int i, j = 0;
+
+    // Initialize single queue
+    if (currentTime == 0) {
+        printf("Initializing job queue\n");
+        schedData->nbOfQueues = 1;
+        for (i = 0; i < MAX_NB_OF_TASKS; i++) {
+            schedData->queues[0][i] = -1;
+        }
+    }
+
+    admitNewTasks(tasks, nbOfTasks, schedData, currentTime);
+    printQueues(tasks, schedData);
+    
+    if ((i = schedData->queues[0][0]) != -1) {
+        // if the first task in the queue is running
+        if (tasks[i].state == RUNNING) {
+            if (tasks[i].executionTime == tasks[i].computationTime) {  // if the task has finished
+                tasks[i].state = TERMINATED;
+                tasks[i].completionDate = currentTime;
+                for (; j < MAX_NB_OF_TASKS - 1; j++) {
+                    schedData->queues[0][j] = schedData->queues[0][j+1];
+                }
+            } else if (tasks[i].executionTime % schedData->quantum == 0) { // if the task finishes a quantum
+                tasks[i].state = SLEEPING;
+                // put the current job to the end of the queue
+                while (j < MAX_NB_OF_TASKS - 1 && schedData->queues[0][j+1] != -1) {
+                    schedData->queues[0][j] = schedData->queues[0][j+1];
+                    j++;
+                }
+                schedData->queues[0][j] = i;
+            } else {
+                tasks[i].executionTime ++;
+                return i;
+            }
+        }
+    }
+
+    // otherwise, elect the first task
+    if ((i = schedData->queues[0][0]) != -1) {
+        tasks[i].state = RUNNING;
+        tasks[i].executionTime ++;
+        return i;
+    }
+    
+    // No task could be elected
     return -1;
 }
 
 int MFQ(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
     //TODO (ASSIGNMENT Q2)
+    
+    // No task could be elected
     return -1;
 }
 
 int IORR(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
     //TODO (ASSIGNMENT BONUS)
+    
+    // No task could be elected
     return -1;
 }

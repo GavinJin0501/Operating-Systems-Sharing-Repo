@@ -1,6 +1,6 @@
 CFLAGS=-Iinclude -Wall
 FILE=tasks
-POLICY=SRTF
+POLICY=RR 4
 #POLICY values
 #	FCFS
 #	SJF
