@@ -1,12 +1,16 @@
 CFLAGS=-Iinclude -Wall
-FILE=tasks
+FILE=tasks_bonus
+#FILE values
+#	tasks
+#	tasks2
+#	tasks_bonus
 POLICY=RR 4
 #POLICY values
 #	FCFS
 #	SJF
 #	SRTF
 #	RR 4
-#	MLF 3
+#	MFQ 3
 #	IORR 4
 
 all: build run

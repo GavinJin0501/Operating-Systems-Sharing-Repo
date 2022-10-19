@@ -65,7 +65,7 @@ void printFinalStatistics(task tasks[], int nbOfTasks, int totalTime) {
     int totalWaitingTime = 0;
     double penaltyRate = 0;
     double averageWaitingTime = 0;
-    double throughput = (double) totalTime / nbOfTasks;
+    double throughput = (double) nbOfTasks / totalTime;
     printf("STATISTICS ########\n");
     for(i=0; i<nbOfTasks; i++) {
         turnaroundTime = tasks[i].completionDate - tasks[i].arrivalDate;
@@ -117,15 +117,21 @@ int main(int argc, char *argv[]){
     printf("Scheduling policy is %s\n", argv[2]);
     
     /* Adjust policy parameters */
-    if (strcmp(argv[2], "RR") == 0)
+    if (strcmp(argv[2], "RR") == 0 || strcmp(argv[2], "MFQ") == 0 || strcmp(argv[2], "IORR") == 0)
         schedData->quantum = atoi(argv[3]);
     
     /* Read the file line by line */
     printf("Loading file of tasks\n");
     while (fgets(line, sizeof(line), file) != NULL ) {
-        sscanf(line, "%s %u %u\n", tasks[nbOfTasks].name, &(tasks[nbOfTasks].computationTime), &(tasks[nbOfTasks].arrivalDate));
+        if (strcmp(argv[2], "IORR") == 0) {
+            sscanf(line, "%s %u %u %u %u\n", tasks[nbOfTasks].name, &(tasks[nbOfTasks].computationTime), &(tasks[nbOfTasks].arrivalDate), &(tasks[nbOfTasks].ioTime), &(tasks[nbOfTasks].ioFrequency));
+            tasks[nbOfTasks].ioEvictedDate = 0;
+        } else {
+            sscanf(line, "%s %u %u\n", tasks[nbOfTasks].name, &(tasks[nbOfTasks].computationTime), &(tasks[nbOfTasks].arrivalDate));
+        }  
         tasks[nbOfTasks].state = UPCOMING;
         tasks[nbOfTasks].executionTime = 0;
+        tasks[nbOfTasks].cyclesInQuantum = 0;
         nbOfTasks ++;
     }
     fclose(file);

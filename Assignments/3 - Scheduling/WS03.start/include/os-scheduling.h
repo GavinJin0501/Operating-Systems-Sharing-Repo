@@ -21,11 +21,14 @@ typedef struct task {
     char name[MAX_TASK_NAME_SIZE]; //task name
     unsigned int computationTime; //task duration
     unsigned int arrivalDate; //date of insertion in the system
+    unsigned int ioTime;  // io duration
+    unsigned int ioFrequency; // frequency of io
     /* Used by scheduler */
     unsigned int state;
     unsigned int executionTime; //nb of cycles on processor
     unsigned int cyclesInQuantum;
     unsigned int completionDate;
+    unsigned int ioEvictedDate;
 } task;
 
 typedef struct sched_data {
