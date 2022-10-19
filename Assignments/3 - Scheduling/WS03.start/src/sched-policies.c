@@ -39,19 +39,34 @@ int getShortestJobIndex(task tasks[], sched_data* schedData, int mode) {
 }
 
 
+void insert_back(task tasks[], sched_data* schedData, int i, int val) {
+    while (i < MAX_NB_OF_TASKS - 1 && schedData->queues[0][i + 1] != -1) {
+        schedData->queues[0][i] = schedData->queues[0][i + 1];
+        i++;
+    }
+    schedData->queues[0][i] = val;
+}
+
+
+void init_queues(sched_data* schedData, int currentTime, int numOfQueues) {
+    if (currentTime == 0) {
+        printf("Initializing job queue\n");
+        schedData->nbOfQueues = numOfQueues;
+        for (int i = 0; i < numOfQueues; i++) {
+            for (int j = 0; j < MAX_NB_OF_TASKS; j++) {
+                schedData->queues[i][j] = -1;
+            }
+        }
+    }
+}
+
+
 int FCFS(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
     
     int i, j;
     
     // Initialize single queue
-    if (currentTime == 0) {
-        printf("Initializing job queue\n");
-        schedData->nbOfQueues = 1;
-        for (i = 0; i < MAX_NB_OF_TASKS; i++) {
-            schedData->queues[0][i] = -1;
-        }
-    }
-    
+    init_queues(schedData, currentTime, 1);
     admitNewTasks(tasks, nbOfTasks, schedData, currentTime);
     printQueues(tasks, schedData);
     
@@ -93,14 +108,7 @@ int SJF(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
     int i, j;
 
     // Initialize single queue
-    if (currentTime == 0) {
-        printf("Initializing job queue\n");
-        schedData->nbOfQueues = 1;
-        for (i = 0; i < MAX_NB_OF_TASKS; i++) {
-            schedData->queues[0][i] = -1;
-        }
-    }
-
+    init_queues(schedData, currentTime, 1);
     admitNewTasks(tasks, nbOfTasks, schedData, currentTime);
     printQueues(tasks, schedData);
 
@@ -143,20 +151,13 @@ int SRTF(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
     int i, j, sr_job;
 
     // Initialize single queue
-    if (currentTime == 0) {
-        printf("Initializing job queue\n");
-        schedData->nbOfQueues = 1;
-        for (i = 0; i < MAX_NB_OF_TASKS; i++) {
-            schedData->queues[0][i] = -1;
-        }
-    }
-
+    init_queues(schedData, currentTime, 1);
     admitNewTasks(tasks, nbOfTasks, schedData, currentTime);
     printQueues(tasks, schedData);
 
     // find if there is a running task
     j = 0;
-    while (j <= MAX_NB_OF_TASKS && (i = schedData->queues[0][j]) != -1 && tasks[i].state != RUNNING) j++;
+    while (j < MAX_NB_OF_TASKS && (i = schedData->queues[0][j]) != -1 && tasks[i].state != RUNNING) j++;
 
     // if there is a running task with index i
     if (i != -1 && tasks[i].state == RUNNING) { 
@@ -168,6 +169,7 @@ int SRTF(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
             }
         } else if (i != getShortestJobIndex(tasks, schedData, MODE_SRTF)) { // if running task does not have the shortest remaining time
             tasks[i].state = READY;
+            insert_back(tasks, schedData, j, i);
         } else {
             tasks[i].executionTime ++;
             return i;
@@ -191,14 +193,7 @@ int RR(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
     int i, j = 0;
 
     // Initialize single queue
-    if (currentTime == 0) {
-        printf("Initializing job queue\n");
-        schedData->nbOfQueues = 1;
-        for (i = 0; i < MAX_NB_OF_TASKS; i++) {
-            schedData->queues[0][i] = -1;
-        }
-    }
-
+    init_queues(schedData, currentTime, 1);
     admitNewTasks(tasks, nbOfTasks, schedData, currentTime);
     printQueues(tasks, schedData);
     
@@ -211,15 +206,11 @@ int RR(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
                 for (; j < MAX_NB_OF_TASKS - 1; j++) {
                     schedData->queues[0][j] = schedData->queues[0][j+1];
                 }
-            } else if (tasks[i].cyclesInQuantum % schedData->quantum == 0) { // if the task finishes a quantum
+            } else if (tasks[i].cyclesInQuantum == schedData->quantum) { // if the task finishes a quantum
                 tasks[i].state = READY;
                 tasks[i].cyclesInQuantum = 0;
                 // put the current job to the end of the queue
-                while (j < MAX_NB_OF_TASKS - 1 && schedData->queues[0][j+1] != -1) {
-                    schedData->queues[0][j] = schedData->queues[0][j+1];
-                    j++;
-                }
-                schedData->queues[0][j] = i;
+                insert_back(tasks, schedData, j, i);
             } else {
                 tasks[i].executionTime ++;
                 tasks[i].cyclesInQuantum ++;
@@ -240,21 +231,13 @@ int RR(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
     return -1;
 }
 
+
 int MFQ(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
     //TODO (ASSIGNMENT Q2)
     int i, j, z, QUEUES = 3;
 
     // Initialize multi-level queue (3 levels)
-    if (currentTime == 0) {
-        printf("Initializing job queue\n");
-        schedData->nbOfQueues = QUEUES;
-        for (i = 0; i < QUEUES; i++) {
-            for (j = 0; j < MAX_NB_OF_TASKS; j++) {
-                schedData->queues[i][j] = -1;
-            }
-        }
-    }
-
+    init_queues(schedData, currentTime, QUEUES);
     admitNewTasks(tasks, nbOfTasks, schedData, currentTime);
     printQueues(tasks, schedData);
 
@@ -299,11 +282,112 @@ int MFQ(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
     return -1;
 }
 
+
 int IORR(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
     //TODO (ASSIGNMENT BONUS)
-    int i, j;
+    int i, j, z, temp, task_i;
 
+    // Initialize single queue
+    init_queues(schedData, currentTime, 1);
+    admitNewTasks(tasks, nbOfTasks, schedData, currentTime);
+    printQueues(tasks, schedData);
 
+    // Before scheduling: 
+    //   1. Find if there is a running task
+    //   2. Check sleeping (suspended) task
+    //       2.1 ready
+    //       2.2 terminated
+    i = -1;
+    task_i = -1;
+    j = 0;
+    while (j <= MAX_NB_OF_TASKS) {
+        temp = schedData->queues[0][j];
+        if (temp == -1) {
+            break;
+        } else if (tasks[temp].state == RUNNING) {
+            i = temp;
+            task_i = j;
+        } else if (tasks[temp].state == SLEEPING) {
+            if (currentTime - tasks[temp].ioEvictedDate == tasks[temp].ioTime) {
+                if (tasks[temp].executionTime == tasks[temp].computationTime) {
+                    tasks[temp].state = TERMINATED;
+                    tasks[temp].completionDate = currentTime;
+                    for (z = j; z < MAX_NB_OF_TASKS - 1; z++) {
+                        schedData->queues[0][z] = schedData->queues[0][z+1];
+                    }
+                    j--;
+                } else {
+                    tasks[temp].state = READY;
+                }
+            } 
+        }
+        j++;
+    }
+
+    if (i != -1) {
+        if (tasks[i].ioTime != 0) { // has io block
+            if (tasks[i].executionTime == tasks[i].computationTime) {
+                tasks[i].state = SLEEPING;
+                tasks[i].ioEvictedDate = currentTime;
+                insert_back(tasks, schedData, task_i, i);
+            } else if (tasks[i].ioFrequency <= schedData->quantum) {
+                if (tasks[i].executionTime % tasks[i].ioFrequency == 0) {
+                    tasks[i].state = SLEEPING;
+                    tasks[i].ioEvictedDate = currentTime;
+                    insert_back(tasks, schedData, task_i, i);
+                } else if (tasks[i].cyclesInQuantum == schedData->quantum) {
+                    tasks[i].state = READY;
+                    tasks[i].cyclesInQuantum = 0;
+                    insert_back(tasks, schedData, task_i, i);
+                } else {
+                    tasks[i].executionTime ++;
+                    tasks[i].cyclesInQuantum ++;
+                    return i;
+                }
+            } else if (tasks[i].ioFrequency > schedData->quantum) {
+                if (tasks[i].cyclesInQuantum == schedData->quantum) {
+                    tasks[i].state = READY;
+                    tasks[i].cyclesInQuantum = 0;
+                    insert_back(tasks, schedData, task_i, i);
+                } else if (tasks[i].executionTime % tasks[i].ioFrequency == 0) {
+                    tasks[i].state = SLEEPING;
+                    tasks[i].ioEvictedDate = currentTime;
+                    insert_back(tasks, schedData, task_i, i);
+                } else {
+                    tasks[i].executionTime ++;
+                    tasks[i].cyclesInQuantum ++;
+                    return i;
+                }
+            }
+        } else { // does not have io block
+            if (tasks[i].executionTime == tasks[i].computationTime) { // terminate it immediately
+                tasks[i].state = TERMINATED;
+                tasks[i].completionDate = currentTime;
+                for (; task_i < MAX_NB_OF_TASKS - 1; task_i++) {
+                    schedData->queues[0][task_i] = schedData->queues[0][task_i+1];
+                }
+            } else if (tasks[i].cyclesInQuantum == schedData->quantum) {
+                tasks[i].state = READY;
+                tasks[i].cyclesInQuantum = 0;
+                insert_back(tasks, schedData, task_i, i);
+            } else {
+                tasks[i].executionTime ++;
+                tasks[i].cyclesInQuantum ++;
+                return i;
+            }
+        }
+            
+    } 
+
+    // find the first ready task
+    j = 0;
+    while (j < MAX_NB_OF_TASKS && ((i = schedData->queues[0][j]) != -1) && tasks[i].state != READY) j++;
+    if (i != -1) {
+        tasks[i].state = RUNNING;
+        tasks[i].executionTime ++;
+        tasks[i].cyclesInQuantum ++;
+        return i;
+    }
     
     // No task could be elected
     return -1;
