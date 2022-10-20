@@ -1,10 +1,10 @@
 CFLAGS=-Iinclude -Wall
-FILE=tasks
+FILE=tasks_bonus
 #FILE values
 #	tasks
 #	tasks2
 #	tasks_bonus
-POLICY=MFQ 3
+POLICY=IORR 4
 #POLICY values
 #	FCFS
 #	SJF

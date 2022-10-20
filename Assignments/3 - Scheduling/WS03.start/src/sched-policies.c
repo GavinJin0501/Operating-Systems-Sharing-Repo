@@ -38,7 +38,6 @@ int getShortestJobIndex(task tasks[], sched_data* schedData, int mode) {
     return ans;
 }
 
-
 void insert_back(task tasks[], sched_data* schedData, int i, int val) {
     while (i < MAX_NB_OF_TASKS - 1 && schedData->queues[0][i + 1] != -1) {
         schedData->queues[0][i] = schedData->queues[0][i + 1];
@@ -46,7 +45,6 @@ void insert_back(task tasks[], sched_data* schedData, int i, int val) {
     }
     schedData->queues[0][i] = val;
 }
-
 
 void init_queues(sched_data* schedData, int currentTime, int numOfQueues) {
     if (currentTime == 0) {
@@ -292,13 +290,8 @@ int IORR(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
     admitNewTasks(tasks, nbOfTasks, schedData, currentTime);
     printQueues(tasks, schedData);
 
-    // Before scheduling: 
-    //   1. Find if there is a running task
-    //   2. Check sleeping (suspended) task
-    //       2.1 ready
-    //       2.2 terminated
-    i = -1;
-    task_i = -1;
+    i = -1;         // index in tasks
+    task_i = -1;    // index of the task in queue
     j = 0;
     while (j <= MAX_NB_OF_TASKS) {
         temp = schedData->queues[0][j];
@@ -330,7 +323,7 @@ int IORR(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
                 tasks[i].state = SLEEPING;
                 tasks[i].ioEvictedDate = currentTime;
                 insert_back(tasks, schedData, task_i, i);
-            } else if (tasks[i].ioFrequency <= schedData->quantum) {
+            } else if (tasks[i].ioFrequency < schedData->quantum) {
                 if (tasks[i].executionTime % tasks[i].ioFrequency == 0) {
                     tasks[i].state = SLEEPING;
                     tasks[i].ioEvictedDate = currentTime;
@@ -351,6 +344,17 @@ int IORR(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
                     insert_back(tasks, schedData, task_i, i);
                 } else if (tasks[i].executionTime % tasks[i].ioFrequency == 0) {
                     tasks[i].state = SLEEPING;
+                    tasks[i].ioEvictedDate = currentTime;
+                    insert_back(tasks, schedData, task_i, i);
+                } else {
+                    tasks[i].executionTime ++;
+                    tasks[i].cyclesInQuantum ++;
+                    return i;
+                }
+            } else {
+                if (tasks[i].cyclesInQuantum == schedData->quantum) {
+                    tasks[i].state = SLEEPING;
+                    tasks[i].cyclesInQuantum = 0;
                     tasks[i].ioEvictedDate = currentTime;
                     insert_back(tasks, schedData, task_i, i);
                 } else {
