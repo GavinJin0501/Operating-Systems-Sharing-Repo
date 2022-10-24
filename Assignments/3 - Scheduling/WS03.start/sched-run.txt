@@ -157,40 +157,40 @@ Task: T3 	 arrivalDate:3    	 state:terminated 	 computations:5/5
 Nb of queues 1
 Q0 => T1 T2 
 
-Time 21: T2
-Task: T1 	 arrivalDate:0    	 state:ready      	 computations:8/10
+Time 21: T1
+Task: T1 	 arrivalDate:0    	 state:running    	 computations:9/10
+Task: T2 	 arrivalDate:2    	 state:ready      	 computations:8/12
+Task: T3 	 arrivalDate:3    	 state:terminated 	 computations:5/5
+Nb of queues 1
+Q0 => T1 T2 
+
+Time 22: T2
+Task: T1 	 arrivalDate:0    	 state:ready      	 computations:9/10
 Task: T2 	 arrivalDate:2    	 state:running    	 computations:9/12
 Task: T3 	 arrivalDate:3    	 state:terminated 	 computations:5/5
 Nb of queues 1
 Q0 => T2 T1 
 
-Time 22: T2
-Task: T1 	 arrivalDate:0    	 state:ready      	 computations:8/10
+Time 23: T2
+Task: T1 	 arrivalDate:0    	 state:ready      	 computations:9/10
 Task: T2 	 arrivalDate:2    	 state:running    	 computations:10/12
 Task: T3 	 arrivalDate:3    	 state:terminated 	 computations:5/5
 Nb of queues 1
 Q0 => T2 T1 
 
-Time 23: T2
-Task: T1 	 arrivalDate:0    	 state:ready      	 computations:8/10
+Time 24: T2
+Task: T1 	 arrivalDate:0    	 state:ready      	 computations:9/10
 Task: T2 	 arrivalDate:2    	 state:running    	 computations:11/12
 Task: T3 	 arrivalDate:3    	 state:terminated 	 computations:5/5
 Nb of queues 1
 Q0 => T2 T1 
 
-Time 24: T2
-Task: T1 	 arrivalDate:0    	 state:ready      	 computations:8/10
+Time 25: T2
+Task: T1 	 arrivalDate:0    	 state:ready      	 computations:9/10
 Task: T2 	 arrivalDate:2    	 state:running    	 computations:12/12
 Task: T3 	 arrivalDate:3    	 state:terminated 	 computations:5/5
 Nb of queues 1
 Q0 => T2 T1 
-
-Time 25: T1
-Task: T1 	 arrivalDate:0    	 state:running    	 computations:9/10
-Task: T2 	 arrivalDate:2    	 state:suspended  	 computations:12/12
-Task: T3 	 arrivalDate:3    	 state:terminated 	 computations:5/5
-Nb of queues 1
-Q0 => T1 T2 
 
 Time 26: T1
 Task: T1 	 arrivalDate:0    	 state:running    	 computations:10/10
@@ -201,10 +201,10 @@ Q0 => T1 T2
 
 Time 27: no task to schedule
 Task: T1 	 arrivalDate:0    	 state:suspended  	 computations:10/10
-Task: T2 	 arrivalDate:2    	 state:terminated 	 computations:12/12
+Task: T2 	 arrivalDate:2    	 state:suspended  	 computations:12/12
 Task: T3 	 arrivalDate:3    	 state:terminated 	 computations:5/5
 Nb of queues 1
-Q0 => T1 
+Q0 => T2 T1 
 
 Time 28: no task to schedule
 Task: T1 	 arrivalDate:0    	 state:suspended  	 computations:10/10
@@ -230,8 +230,8 @@ All done after 30 units of time
 
 ######## IORR STATISTICS ########
 Task: T1 	 turnaround time:30 	 penalty rate:3.00
-Task: T2 	 turnaround time:25 	 penalty rate:2.08
+Task: T2 	 turnaround time:26 	 penalty rate:2.17
 Task: T3 	 turnaround time:15 	 penalty rate:3.00
-Average waiting time = 14.33
+Average waiting time = 14.67
 Throughput = 0.10
 

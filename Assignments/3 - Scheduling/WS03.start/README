@@ -1,0 +1,30 @@
+
+First Name: Jiayao
+
+Last Name: Jin
+
+NYU ID: jj2915
+
+=======================================================================================
+Files submitted:
+
+src:
+    sched-policies.c
+    sched-simulator.c
+
+include:
+    os-scheduling.h
+
+=======================================================================================
+Targets in the Makefile:
+
+build: clean and compile the program
+run: run the program
+
+=======================================================================================
+Comments:
+
+
+
+=======================================================================================
+Textual answers: 
