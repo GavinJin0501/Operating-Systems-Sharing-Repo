@@ -68,14 +68,14 @@ Q0 => T2 T3 T1
 
 Time 8: T3
 Task: T1 	 arrivalDate:0    	 state:ready      	 computations:4/10
-Task: T2 	 arrivalDate:2    	 state:suspended  	 computations:4/12
+Task: T2 	 arrivalDate:2    	 state:ready      	 computations:4/12
 Task: T3 	 arrivalDate:3    	 state:running    	 computations:1/5
 Nb of queues 1
 Q0 => T3 T1 T2 
 
 Time 9: T3
 Task: T1 	 arrivalDate:0    	 state:ready      	 computations:4/10
-Task: T2 	 arrivalDate:2    	 state:suspended  	 computations:4/12
+Task: T2 	 arrivalDate:2    	 state:ready      	 computations:4/12
 Task: T3 	 arrivalDate:3    	 state:running    	 computations:2/5
 Nb of queues 1
 Q0 => T3 T1 T2 
@@ -131,14 +131,14 @@ Q0 => T2 T3 T1
 
 Time 17: T3
 Task: T1 	 arrivalDate:0    	 state:ready      	 computations:5/10
-Task: T2 	 arrivalDate:2    	 state:suspended  	 computations:8/12
+Task: T2 	 arrivalDate:2    	 state:ready      	 computations:8/12
 Task: T3 	 arrivalDate:3    	 state:running    	 computations:5/5
 Nb of queues 1
 Q0 => T3 T1 T2 
 
 Time 18: T1
 Task: T1 	 arrivalDate:0    	 state:running    	 computations:6/10
-Task: T2 	 arrivalDate:2    	 state:suspended  	 computations:8/12
+Task: T2 	 arrivalDate:2    	 state:ready      	 computations:8/12
 Task: T3 	 arrivalDate:3    	 state:terminated 	 computations:5/5
 Nb of queues 1
 Q0 => T1 T2 

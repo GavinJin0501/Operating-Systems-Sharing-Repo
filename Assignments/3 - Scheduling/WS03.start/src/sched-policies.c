@@ -316,25 +316,23 @@ int IORR(task tasks[], int nbOfTasks, sched_data* schedData, int currentTime) {
     }
 
     if (i != -1) {
-        if (tasks[i].executionTime == tasks[i].computationTime) {
-            if (tasks[i].ioTime != 0) {
-                tasks[i].state = SLEEPING;
-                tasks[i].ioEvictedDate = currentTime;
-                insert_back(tasks, schedData, task_i, i);
-            } else {
-                tasks[i].state = TERMINATED;
-                tasks[i].completionDate = currentTime;
-                for (; task_i < MAX_NB_OF_TASKS - 1; task_i++) {
-                    schedData->queues[0][task_i] = schedData->queues[0][task_i+1];
-                }
-            }
-        } else if (tasks[i].ioFrequency != 0 && tasks[i].executionTime % tasks[i].ioFrequency == 0) {
+        if (tasks[i].ioFrequency != 0 && tasks[i].executionTime == tasks[i].computationTime) {
             tasks[i].state = SLEEPING;
             tasks[i].ioEvictedDate = currentTime;
             insert_back(tasks, schedData, task_i, i);
+        } else if (tasks[i].executionTime == tasks[i].computationTime) {
+            tasks[i].state = TERMINATED;
+            tasks[i].completionDate = currentTime;
+            for (; task_i < MAX_NB_OF_TASKS - 1; task_i++) {
+                schedData->queues[0][task_i] = schedData->queues[0][task_i+1];
+            }
         } else if (tasks[i].cyclesInQuantum == schedData->quantum) {
             tasks[i].state = READY;
             tasks[i].cyclesInQuantum = 0;
+            insert_back(tasks, schedData, task_i, i);
+        } else if (tasks[i].ioFrequency != 0 && tasks[i].executionTime % tasks[i].ioFrequency == 0) {
+            tasks[i].state = SLEEPING;
+            tasks[i].ioEvictedDate = currentTime;
             insert_back(tasks, schedData, task_i, i);
         } else {
             tasks[i].executionTime ++;

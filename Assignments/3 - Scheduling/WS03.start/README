@@ -23,8 +23,8 @@ run: run the program
 
 =======================================================================================
 Comments:
-
-
+For bonus, I add and/or modified line 120, 126 - 128, 134 in file sched-simulator.c
+             add and/or modified line 24, 25, 31 in file os-scheduling.h
 
 =======================================================================================
 Textual answers: 
