@@ -4,13 +4,13 @@ LIBRARIES=-lrt -lpthread
 ## SIMULATION SETTINGS ##
 # Change the integer values below to set:
 # 	the nb of philosophers
-NB_PHILS=-DNPHIL=3
+NB_PHILS=-DNPHIL=4
 # 	the nb of meals per philosopher
-NB_MEALS=-DMEALS=4
+NB_MEALS=-DMEALS=5
 #########################
 
 #compiles and runs your solution
-all: build run
+all: clean build run
 
 #compiles two examples
 #1. bin/noconc forces philosophers to eat one at a time
