@@ -76,15 +76,17 @@ int main () {
         for (i = 0; i < N; i++) {
             sem_post(sem2);
         }
+    }   
+    
+    sem_close(sem1);
+    sem_close(sem2);
+    munmap(sp, sizeof(int) * N);
 
-        sem_close(sem1);
-        sem_close(sem2);
+    if (i == N) {
         sem_unlink("sem1");
         sem_unlink("sem2");
-
-        munmap(sp, sizeof(int) * N);
         shm_unlink(name);
-    }   
+    }
 
     return EXIT_SUCCESS;
 }

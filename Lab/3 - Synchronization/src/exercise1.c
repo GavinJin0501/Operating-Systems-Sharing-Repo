@@ -55,10 +55,12 @@ int main () {
             sum += *(sp + i);
         }
         printf("= %d\n", sum);
-
-        munmap(sp, sizeof(int) * N);
-        shm_unlink(name);
     }   
+
+    munmap(sp, sizeof(int) * N);
+    if (i == N) {
+        shm_unlink(name);
+    }
 
     return EXIT_SUCCESS;
 }
