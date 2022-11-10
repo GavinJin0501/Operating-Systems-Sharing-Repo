@@ -15,7 +15,8 @@
 //TODO: Declare your shared memory / semaphore structures and variables
 typedef struct barrier_shared_memory {
     sem_t* mutex;
-    sem_t* sem_block;
+    sem_t* sem_odd;
+    sem_t* sem_even;
     int* finished;
     int n_pcs;
 } barrier_shm;
@@ -30,7 +31,8 @@ void compute() {
 void cleanup() {
     //TODO: Destroy your shared memory / semaphores
     sem_close(my_shm->mutex);
-    sem_close(my_shm->sem_block);
+    sem_close(my_shm->sem_odd);
+    sem_close(my_shm->sem_even);
     munmap(my_shm->finished, sizeof(int) * my_shm->n_pcs);
     shm_unlink(SHMNAME2);
     munmap(my_shm, sizeof(barrier_shm));
@@ -56,9 +58,11 @@ void init() {
 void wait_barrier(int pcs_nb) {
     //TODO: Write your synchronization
     int isSame = 1, i;
+    sem_t* local_sem;
     
     sem_wait(my_shm->mutex);
     my_shm->finished[pcs_nb]++;
+    local_sem = (my_shm->finished[pcs_nb] % 2 == 1) ? my_shm->sem_odd : my_shm->sem_even;
     for (i = 0; i < my_shm->n_pcs; i++) {
         if (i != pcs_nb && my_shm->finished[i] != my_shm->finished[pcs_nb]) {
             isSame = 0;
@@ -68,10 +72,10 @@ void wait_barrier(int pcs_nb) {
     sem_post(my_shm->mutex);
     
     if (isSame != 1) { // block n - 1
-        sem_wait(my_shm->sem_block);
+        sem_wait(local_sem);
     } else {
         for (i = 0; i < my_shm->n_pcs - 1; i++) {
-            sem_post(my_shm->sem_block);
+            sem_post(local_sem);
         }
     }
 }
@@ -96,7 +100,8 @@ int main(int argc , char **argv) {
     }
     my_shm = (barrier_shm*) mmap(0, sizeof(barrier_shm), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     my_shm->mutex = sem_open("/mutex", O_CREAT | O_RDWR, 0600, 1);
-    my_shm->sem_block = sem_open("/sem_block", O_CREAT | O_RDWR, 0600, 0);
+    my_shm->sem_odd = sem_open("/sem_odd", O_CREAT | O_RDWR, 0600, 0);
+    my_shm->sem_even = sem_open("/sem_even", O_CREAT | O_RDWR, 0600, 0);
     my_shm->n_pcs = N_PCS;
 
     fd = shm_open(SHMNAME2, O_CREAT | O_RDWR, 0600);
@@ -106,7 +111,7 @@ int main(int argc , char **argv) {
     }
     my_shm->finished = (int*) mmap(0, sizeof(int) * N_PCS, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     for (i = 0; i < N_PCS; i++) {
-        my_shm->finished[i] = 0;
+        my_shm->finished[i] = -1;
     }
 
     /* Record the PID of the initial parent process */

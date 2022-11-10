@@ -44,7 +44,6 @@ int main(int argc, char* argv[]) {
     } else {
         for (j = 0; j < N; j++) {
             for (i = 0; i < N; i++)
-                // sem_wait(scons[i]);
                 sem_wait(scons);
             for (i = 0; i < N; i++) {
                 total += vals[i];
