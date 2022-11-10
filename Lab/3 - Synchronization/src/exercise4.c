@@ -1,6 +1,9 @@
 #define _XOPEN_SOURCE 700
 #define SHMNAME1 "myshm1"
 #define SHMNAME2 "myshm2"
+#define SEMMUTEX "/mutex"
+#define SEMODD "/sem_odd"
+#define SEMEVEN "/sem_even"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,6 +36,9 @@ void cleanup() {
     sem_close(my_shm->mutex);
     sem_close(my_shm->sem_odd);
     sem_close(my_shm->sem_even);
+    sem_unlink(SEMMUTEX);
+    sem_unlink(SEMODD);
+    sem_unlink(SEMEVEN);
     munmap(my_shm->finished, sizeof(int) * my_shm->n_pcs);
     shm_unlink(SHMNAME2);
     munmap(my_shm, sizeof(barrier_shm));
@@ -99,9 +105,9 @@ int main(int argc , char **argv) {
         exit(-1);
     }
     my_shm = (barrier_shm*) mmap(0, sizeof(barrier_shm), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-    my_shm->mutex = sem_open("/mutex", O_CREAT | O_RDWR, 0600, 1);
-    my_shm->sem_odd = sem_open("/sem_odd", O_CREAT | O_RDWR, 0600, 0);
-    my_shm->sem_even = sem_open("/sem_even", O_CREAT | O_RDWR, 0600, 0);
+    my_shm->mutex = sem_open(SEMMUTEX, O_CREAT | O_RDWR, 0600, 1);
+    my_shm->sem_odd = sem_open(SEMODD, O_CREAT | O_RDWR, 0600, 0);
+    my_shm->sem_even = sem_open(SEMEVEN, O_CREAT | O_RDWR, 0600, 0);
     my_shm->n_pcs = N_PCS;
 
     fd = shm_open(SHMNAME2, O_CREAT | O_RDWR, 0600);
