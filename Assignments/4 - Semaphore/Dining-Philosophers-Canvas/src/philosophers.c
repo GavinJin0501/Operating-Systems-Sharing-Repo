@@ -64,8 +64,9 @@ void cleanup() {
     /**** TODO ****/
     int i;
     for (i = 0; i < NPHIL; i++)
-        sem_close(&(my_shm->sync[i]));
+        sem_destroy(&(my_shm->sync[i]));
     sem_close(my_shm->maxPickingLeft);
+    sem_unlink("maxEatingSem");
     munmap(my_shm, sizeof(philo_shm));
     shm_unlink(PHISHM_NAME);
 }

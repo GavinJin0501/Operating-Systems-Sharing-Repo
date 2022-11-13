@@ -34,11 +34,12 @@ void compute() {
 void cleanup() {
     //TODO: Destroy your shared memory / semaphores
     sem_close(my_shm->mutex);
-    sem_close(my_shm->sem_odd);
-    sem_close(my_shm->sem_even);
     sem_unlink(SEMMUTEX);
+    sem_close(my_shm->sem_odd);
     sem_unlink(SEMODD);
+    sem_close(my_shm->sem_even);
     sem_unlink(SEMEVEN);
+    
     munmap(my_shm->finished, sizeof(int) * my_shm->n_pcs);
     shm_unlink(SHMNAME2);
     munmap(my_shm, sizeof(barrier_shm));

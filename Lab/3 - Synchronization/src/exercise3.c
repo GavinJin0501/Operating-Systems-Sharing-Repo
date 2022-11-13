@@ -1,5 +1,3 @@
-#define _XOPEN_SOURCE 700
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -9,60 +7,80 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#define N 6
 
-sem_t* sprod[N];
-sem_t* scons;
-int* vals;
+#define N 3
 
+int main(int argc , char **argv) {
 
-int main(int argc, char* argv[]) {
-    int i, j, fd, total = 0;
+	int i, j, total = 0, fd, *vals;
+    sem_t *scons[N];
+    sem_t *sprod[N];
+	
+	fd = shm_open("myshm", O_CREAT|O_RDWR, 0600);
+	ftruncate(fd, N*sizeof(int));
+	vals = (int*) mmap(0, N*sizeof(int), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
 
-    fd = shm_open("myshm", O_CREAT | O_RDWR, 0600);
-    ftruncate(fd, sizeof(int) * N);
-    vals = (int*) mmap(0, sizeof(int) * N, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-
-    char* s_name = (char*) malloc(sizeof(char) * 16);
+    char* s_name = (char*) malloc(16*sizeof(char));
     for (i = 0; i < N; i++) {
-        sprintf(s_name, "sprod:%d", i);
-        sprod[i] = sem_open(s_name, O_CREAT | O_RDWR, 0600, 0);
+        sprintf(s_name, "/scons:%d", i);
+        printf("semaphore name == %s\n", s_name);
+        scons[i] = sem_open(s_name, O_CREAT|O_RDWR, 0600, 0);
+        if (scons[i] == SEM_FAILED) {
+            perror("sem_open");
+            exit(1);
+        }
+        sprintf(s_name, "/sprod:%d", i);
+        printf("semaphore name == %s\n", s_name);
+        sprod[i] = sem_open(s_name, O_CREAT|O_RDWR, 0600, 1);
+        if (sprod[i] == SEM_FAILED) {
+            perror("sem_open");
+            exit(2);
+        }
     }
-    scons = sem_open("/scons", O_CREAT | O_RDWR, 0600, 0);
-
-    for (i = 0; i < N && fork() > 0; i++);
-
-    if (i < N) {
+	
+	
+	for (i = 0; ((i < N) && (fork() > 0)); i++);
+	
+	if (i < N) {
         srand(getpid());
         for (j = 0; j < N; j++) {
-            vals[i] = rand() % 10;
-            sem_post(scons);
             sem_wait(sprod[i]);
+            vals[i] = rand()%10;
+            printf("%d(%d) > %d\n", getpid(), i, vals[i]);
+            sem_post(scons[i]);
         }
         sem_close(sprod[i]);
+        sem_close(scons[i]);
 		exit(0);
-    } else {
+	} else {
         for (j = 0; j < N; j++) {
             for (i = 0; i < N; i++)
-                sem_wait(scons);
+                sem_wait(scons[i]);
             for (i = 0; i < N; i++) {
+                printf("PP> child %d - %d\n", i, vals[i]);
                 total += vals[i];
             }
-            printf("Round %d:> sum is %d.\n", j, total);
             for (i = 0; i < N; i++)
                 sem_post(sprod[i]);
         }
-    }
+	}
+
+    /**
+     * Uncomment the following line and open another terminal
+     * to observe that, at this point, the /dev/shm directory
+     * holds your named semaphores & your shared memory segment
+     */
+    //getchar();
 
     for (i = 0; i < N; i++) {
 		wait(0);
         sem_close(sprod[i]);
         sprintf(s_name, "/sprod:%d", i);
         sem_unlink(s_name);
+        sem_close(scons[i]);
         sprintf(s_name, "/scons:%d", i);
         sem_unlink(s_name);
     }
-    sem_close(scons);
     munmap(vals, N*sizeof(int));
     shm_unlink("myshm");
     
