@@ -20,6 +20,10 @@ exercise3: clean ${SRC}/exercise3.c
 exercise4: clean ${SRC}/exercise4.c
 	${CC} -o ${BIN}/exercise4 ${SRC}/exercise4.c ${LIBRARIES}
 	@${BIN}/exercise4 4 3 
+	
+exercise4_1: clean ${SRC}/exercise4_1.c
+	${CC} -o ${BIN}/exercise4_1 ${SRC}/exercise4_1.c ${LIBRARIES}
+	@${BIN}/exercise4_1 4 4
  
 clean:
 	rm -f ${BIN}/* /dev/shm/*
