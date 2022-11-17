@@ -1,20 +1,23 @@
 #define _XOPEN_SOURCE 700
-#define N 2
+#define N 5
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
 
+
+int* val;
+
 void *thread_control(void *args) {
-    int* order = (int*) args;
-    printf("Thread %d with tid (Before): %d\n", *order, (int) pthread_self());
-    pthread_exit((void *) (*order * 2));
+    int order = * (int*) args;
+    printf("Thread %d with tid (Before): %ld\n", order, (long) pthread_self());
+    pthread_exit((void*) (intptr_t) (order * 2));
 }
 
 int main() {
-    int i, status;
-    int* val;
+    int i, j, status;
+    
     pthread_t tid[N];
 
     for (i = 0; i < N; i++) {
@@ -26,16 +29,14 @@ int main() {
         }
     }
 
-    for (i = 0; i < N; i++) {
-        printf("%d:> %d\n", N, i);
-        if (pthread_join(tid[i], (void**) &status) != 0) {
+    for (j = 0; j < N; j++) {
+        if (pthread_join(tid[j], (void**) &status) != 0) {
             printf("pthread join error\n");
             exit(1);
         } else {
-            printf("Thread %d finished with status: %d\n", i, status);
+            printf("Thread %d finished with status: %d\n", j, status);
         }
     }
-
 
     return EXIT_SUCCESS;
 }
