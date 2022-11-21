@@ -17,5 +17,14 @@ exercise3: ${SRC}/exercise3.c
 	${CC} -o ${BIN}/exercise3 ${SRC}/exercise3.c ${LIBRARIES}
 	@${BIN}/exercise3
 
+exercise4: ${SRC}/exercise4.c
+	${CC} -o ${BIN}/exercise4 ${SRC}/exercise4.c ${LIBRARIES}
+	@${BIN}/exercise4
+
+exercise5: ${SRC}/exercise5.c
+	${CC} -o ${BIN}/exercise5 ${SRC}/exercise5.c ${LIBRARIES}
+	@${BIN}/exercise5
+
+
 clean:
 	rm -f ${BIN}/* /dev/shm/*
