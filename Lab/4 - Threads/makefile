@@ -9,21 +9,13 @@ exercise1: ${SRC}/exercise1.c
 	${CC} -o ${BIN}/exercise1 ${SRC}/exercise1.c ${LIBRARIES}
 	@${BIN}/exercise1
 
-example1: ${SRC}/example1.c
-	${CC} -o ${BIN}/example1 ${SRC}/example1.c ${LIBRARIES}
-	@${BIN}/example1
+exercise2: ${SRC}/exercise2.c
+	${CC} -o ${BIN}/exercise2 ${SRC}/exercise2.c ${LIBRARIES}
+	@${BIN}/exercise2
 
-example1_1: ${SRC}/example1_1.c
-	${CC} -o ${BIN}/example1_1 ${SRC}/example1_1.c ${LIBRARIES}
-	@${BIN}/example1_1
-
-example2: ${SRC}/example2.c
-	${CC} -o ${BIN}/example2 ${SRC}/example2.c ${LIBRARIES}
-	@${BIN}/example2
-
-example3: ${SRC}/example3.c
-	${CC} -o ${BIN}/example3 ${SRC}/example3.c ${LIBRARIES}
-	@${BIN}/example3
+exercise3: ${SRC}/exercise3.c
+	${CC} -o ${BIN}/exercise3 ${SRC}/exercise3.c ${LIBRARIES}
+	@${BIN}/exercise3
 
 clean:
 	rm -f ${BIN}/* /dev/shm/*
