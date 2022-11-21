@@ -1,5 +1,6 @@
 #define _XOPEN_SOURCE 700
 #define NUM_THREADS 5
+#define _REENTRANT
 
 #include <stdio.h>
 #include <pthread.h>
@@ -22,12 +23,12 @@ int main() {
         }
     }
 
-    for (j = 0; j < NUM_THREADS; j++) {
-        if (pthread_join(tid[j], (void**) &status) != 0) {
+    for (i = 0; i < NUM_THREADS; i++) {
+        if (pthread_join(tid[i], (void**) &status) != 0) {
             printf("pthread_join\n");
             exit(1);
         } else {
-            printf("Thread %d finished with status %d\n", j, status);
+            printf("Thread %d finished with status %d\n", i, status);
         }
     }
 
