@@ -9,13 +9,13 @@
 #include <pthread.h>
 
 
-void* file_to_upper(void* arg) {
+void file_to_upper(char* arg) {
     FILE *fp1, *fp2;
     char dest_fname[128];
     int c = 1;
 
-    fp1 = fopen((char*) arg, "r");
-    strcpy(dest_fname, (char*) arg);
+    fp1 = fopen(arg, "r");
+    strcpy(dest_fname, arg);
     strcat(dest_fname, ".UPPER.txt");
     printf("%s\n", dest_fname);
     fp2 = fopen (dest_fname, "w");
@@ -34,16 +34,20 @@ void* file_to_upper(void* arg) {
     fclose (fp1);
     fclose (fp2);
     
-    pthread_exit(NULL);
 }
 
+
+void* thread_func(void* arg) {
+    file_to_upper((char*) arg);
+    pthread_exit(NULL);
+}
 
 int main (int argc, char ** argv) {
     int i, j;
     pthread_t tid[argc - 1];
     
     for (i = 0; i < argc - 1; i++) {
-        if (pthread_create(&(tid[i]), NULL, file_to_upper, (void*) argv[i + 1])) {
+        if (pthread_create(&(tid[i]), NULL, thread_func, (void*) argv[i + 1])) {
             perror("pthread_create error\n");
             exit(1);
         }

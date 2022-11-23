@@ -23,7 +23,7 @@ void wait_barrier(int n) {
     /* TODO: WAIT ON BARRIER UPON EVERY ITERATION */
     
     pthread_mutex_lock(&mx);
-    while (canComeIn == 0) {
+    if (canComeIn == 0) {
         pthread_cond_wait(&condOut, &mx);
     }
     countIn++;
