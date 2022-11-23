@@ -47,7 +47,7 @@ int main (int argc, char ** argv) {
     pthread_t tid[argc - 1];
     
     for (i = 0; i < argc - 1; i++) {
-        if (pthread_create(&(tid[i]), NULL, thread_func, (void*) argv[i + 1])) {
+        if (pthread_create(&(tid[i]), NULL, thread_func, (void*) argv[i + 1]) != 0) {
             perror("pthread_create error\n");
             exit(1);
         }

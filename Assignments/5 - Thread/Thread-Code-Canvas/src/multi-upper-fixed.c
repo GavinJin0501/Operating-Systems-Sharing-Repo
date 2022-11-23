@@ -10,7 +10,7 @@
 
 #define NB_THREAD 3
 
-int fileIndex, totalFiles;
+int nextFileIndex, totalFiles;
 char** files;
 pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER;
 
@@ -45,14 +45,14 @@ void file_to_upper(char* fileName) {
 void * thread_func(void* arg) {
     int localFileIndex;
 
-    while (fileIndex <= totalFiles) {
+    while (1) {
         pthread_mutex_lock(&m);
-        if (fileIndex > totalFiles) {
+        if (nextFileIndex > totalFiles) { // all files are distributed
             pthread_mutex_unlock(&m);
             pthread_exit((void*) 0);
         } else {
-            localFileIndex = fileIndex;
-            fileIndex++;
+            localFileIndex = nextFileIndex;
+            nextFileIndex++;
         }
         pthread_mutex_unlock(&m);
 
@@ -68,12 +68,12 @@ int main (int argc, char ** argv) {
     int i, j;
     pthread_t tid[NB_THREAD];
 
-    fileIndex = 1;
+    nextFileIndex = 1;
     totalFiles = argc - 1;
     files = argv;
     
     for (i = 0; i < NB_THREAD; i++) {
-        if (pthread_create(&(tid[i]), NULL, thread_func, NULL)) {
+        if (pthread_create(&(tid[i]), NULL, thread_func, NULL) != 0) {
             perror("pthread_create error\n");
             exit(1);
         }

@@ -16,5 +16,9 @@ multi-upper-fixed: clean ${SRC}/multi-upper-fixed.c
 	${CC} -o ${BIN}/multi-upper-fixed ${SRC}/multi-upper-fixed.c ${LIBRARIES}
 	@${BIN}/multi-upper-fixed ${TXT}/lower1.txt ${TXT}/lower2.txt ${TXT}/lower3.txt ${TXT}/lower4.txt ${TXT}/lower5.txt
 
+bounded-buffer: clean ${SRC}/bounded-buffer.c
+	${CC} -o ${BIN}/bounded-buffer ${SRC}/bounded-buffer.c ${LIBRARIES}
+	@${BIN}/bounded-buffer
+
 clean:
 	rm -f ${BIN}/* ${TXT}/*.*.UPPER.*
