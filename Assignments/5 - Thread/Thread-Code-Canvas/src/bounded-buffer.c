@@ -5,10 +5,10 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#define NP 3
-#define NC 2
+#define NP 5
+#define NC 5
 #define MAX_CAP 3
-#define NVAL 10
+#define NVAL 1000
 
 int inside, consumed;
 int stack[MAX_CAP];
@@ -17,7 +17,7 @@ pthread_cond_t cond_p = PTHREAD_COND_INITIALIZER;
 pthread_cond_t cond_c = PTHREAD_COND_INITIALIZER;
 
 void terminate_if_possible() {
-    if (consumed == NVAL) {
+    if (consumed >= NVAL) {
         inside = -1;
         pthread_cond_broadcast(&cond_p);
         pthread_cond_broadcast(&cond_c);
@@ -39,10 +39,10 @@ void * consumer_thread(void * args) {
         
         // start consuming
         inside--;
-        printf("Consumer %ld consumes %d\n", (long) pthread_self(), stack[inside]);
+        consumed += stack[inside];
+        printf("Consumer %ld consumes %d, current total: %d\n", (long) pthread_self(), stack[inside], consumed);
         stack[inside] = 0;
-        consumed++;
-
+        
         // Release resource for producer
         pthread_cond_signal(&cond_c);
         
