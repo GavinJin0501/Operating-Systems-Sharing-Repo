@@ -1,0 +1,39 @@
+
+First Name: Jiayao
+
+Last Name: Jin
+
+NYU ID: jj2915
+
+=======================================================================================
+Files submitted:
+
+src:
+    bounded-buffer.c
+    multi-upper-fixed.c
+    multi-upper.c
+    upper.c
+
+txt:
+    lower1.txt
+    lower2.txt
+    lower3.txt
+    lower4.txt
+    lower5.txt
+
+=======================================================================================
+Targets in the Makefile:
+
+upper: run the program upper
+multi-upper: run the program for question 1
+multi-upper-fixed: run the program for question 2
+bounded-buffer: run the program for question 3
+clean: delete the binary files and the convereted UPPER.txt
+
+=======================================================================================
+Comments:
+None
+
+=======================================================================================
+Textual answers: 
+None
