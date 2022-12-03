@@ -63,13 +63,25 @@ void* heap_malloc(int size) {
         return NULL;
     
     // TODO
-    // 1. Update the size
-    freelist = result.found + allocation_size;
-    heap[freelist] = heap[result.found] - allocation_size;
-    heap[freelist + 1] = heap[result.found + 1];
+    // 1. Update outside the allocated mem
+    int next_index;
+    if (heap[result.found] - size >= MIN_BLOCK_SIZE) { // still valid sapce for the current freezone
+        next_index = result.found + allocation_size;
+        heap[next_index] = heap[result.found] - allocation_size;
+        heap[next_index + 1] = heap[result.found + 1];
+    } else {
+        next_index = heap[result.found + 1];
+    }
+
+    if (result.previous != -1) {
+        heap[result.previous + 1] = next_index;
+    }
+    if (result.found == freelist) {
+        freelist = next_index;
+    }
 
     // 2. Update in the allocated mem
-    ptr = (void*) (heap + result.found);
+    ptr = (void*) (heap + result.found + 1);
     heap[result.found] = size;
     heap[result.found + 1] = '\0';
 
@@ -79,15 +91,29 @@ void* heap_malloc(int size) {
 
 int heap_free(void *dz) {
     // TODO
-    int index = ptr2ind(dz), size = heap[index], i;
+    int index = ptr2ind(dz), size, i;
 
+    // The pointer is not valid
+    if (index < 0 || index >= HEAP_SIZE) {
+        return -1;
+    }
+
+    size = heap[index];
     // 1. Empty the memory
     for (i = index; i < size; i++) {
         heap[i + 1] = '\0';
     }
 
-    // 2. Assign the new 
+    // 2. Assign the next link and update freelist
+    if (index < freelist) {
+        heap[index + 1] = freelist;
+        freelist = index;
+    } else if (index > freelist) {
+        heap[index + 1] = heap[freelist + 1];
+        heap[freelist + 1] = index;
+    }
 
+    // 3. Combine the continguous freezone
 
     return 0;
 }
