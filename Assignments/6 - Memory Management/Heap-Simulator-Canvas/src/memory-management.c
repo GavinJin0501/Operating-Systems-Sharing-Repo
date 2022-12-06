@@ -63,12 +63,12 @@ void* heap_malloc(int size) {
         return NULL;
     
     // TODO
-    // 1. Update outside the allocated mem
     int next_index;
     if (heap[result.found] - size >= MIN_BLOCK_SIZE) { // still valid sapce for the current freezone
         next_index = result.found + allocation_size;
         heap[next_index] = heap[result.found] - allocation_size;
         heap[next_index + 1] = heap[result.found + 1];
+        heap[result.found] = size;
     } else {
         next_index = heap[result.found + 1];
     }
@@ -80,40 +80,52 @@ void* heap_malloc(int size) {
         freelist = next_index;
     }
 
-    // 2. Update in the allocated mem
     ptr = (void*) (heap + result.found + 1);
-    heap[result.found] = size;
-    heap[result.found + 1] = '\0';
-
+    allocations[result.found / 2] = (heap + result.found);
     return ptr;
 }
 
 
 int heap_free(void *dz) {
     // TODO
-    int index = ptr2ind(dz), size, i;
+    int index = ptr2ind(dz) - 1, next_i;
 
     // The pointer is not valid
-    if (index < 0 || index >= HEAP_SIZE) {
+    if (index < 0 || index > HEAP_SIZE) {
+        return -1;
+    } else if (allocations[index / 2] == NULL) {
         return -1;
     }
 
-    size = heap[index];
-    // 1. Empty the memory
-    for (i = index; i < size; i++) {
-        heap[i + 1] = '\0';
-    }
-
-    // 2. Assign the next link and update freelist
-    if (index < freelist) {
-        heap[index + 1] = freelist;
+    // 1. Update freelist
+    allocations[index / 2] = NULL;
+    if (freelist == -1 || index < freelist) { // this freezone will be the new first freezone
         freelist = index;
-    } else if (index > freelist) {
-        heap[index + 1] = heap[freelist + 1];
-        heap[freelist + 1] = index;
     }
 
-    // 3. Combine the continguous freezone
+    // 2. Update the available freezones after
+    next_i = index + heap[index] + 1;
+    if (next_i < HEAP_SIZE && allocations[next_i / 2] == NULL) {
+        heap[index] += heap[next_i] + 1;
+        heap[index + 1] = heap[next_i + 1];
+    } else {
+        while (next_i < HEAP_SIZE && allocations[next_i / 2] != NULL) {
+            next_i += *(allocations[next_i / 2]) + 1;
+        }
+        if (next_i < HEAP_SIZE - 1) {
+            heap[index + 1] = next_i;
+        }
+    }
+
+    // 3. Update the previous available freezone
+    if (freelist != index) {
+        next_i = freelist;
+        while (next_i + heap[next_i] + 1 != index) { // find the previous freezone
+            next_i = next_i + heap[next_i] + 1;
+        }
+        heap[next_i] += heap[index] + 1;
+        heap[next_i + 1] = (heap[index + 1] == -1) ? -1 : index;
+    }
 
     return 0;
 }

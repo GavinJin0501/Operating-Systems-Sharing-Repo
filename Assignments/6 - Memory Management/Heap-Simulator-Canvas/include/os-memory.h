@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 #define HEAP_SIZE 128
-#define MIN_BLOCK_SIZE 2
+#define MIN_BLOCK_SIZE 2 // MIN_ZONE_SIZE
 
 /** Memory allocation strategies **/
 #define FIRSTFIT 0

@@ -16,18 +16,17 @@ void run_simulation() {
     print_heap();
 
     
-    // heap_free(p2);
-    // heap_free(p1);
-    // print_heap();
+    heap_free(p2);
+    heap_free(p1);
+    print_heap();
 
-    // p4 = (char*) heap_malloc(7);
-    // strcpy(p4, "system");
-    // print_heap();
+    p4 = (char*) heap_malloc(7);
+    strcpy(p4, "system");
+    print_heap();
 
-    // heap_free(p3);
-    // print_heap();
-    // printf("%s\n", p4);
-
+    heap_free(p3);
+    print_heap();
+    printf("%s\n", p4);
     
     printf("End simulation\n");
 }
